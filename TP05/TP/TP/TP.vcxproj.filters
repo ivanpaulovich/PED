@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\TP03\TP05.c">
+    <ClCompile Include="TP05.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
