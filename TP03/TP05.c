@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 //
-// Carro
+// Entidade Carro
 //
 typedef struct
 {
