@@ -7,9 +7,12 @@
 //
 int SolicitaInteiro();
 char* SolicitaTexto();
-int SolicitaInteiro();
 int SolicitaReal();
 int ImprimeMenu();
+
+const int MIN_ANO = 1950;
+const int MAX_ANO = 2014;
+const int MAX_CARROS = 10;
 
 //
 // Entidade Carro
@@ -20,20 +23,16 @@ typedef struct
 	char*  Modelo;
 	int  Ano;
 	char*  Cor;
-
-	const MIN_ANO = 1950;
-	const MAX_ANO = 2014;
 } Carro;
 
 typedef struct
 {
-	const MAX = 10;
 	int Quantidade;
-	Carro Registros[MAX];
+	Carro Registros[10];
 } ListaCarro;
 
 void CadastrarCarro(ListaCarro lista, Carro carro);
-void ListarCarros(ListaCarro lista);
+void ListarCarros(ListaCarro* lista);
 void ExcluirCarro(ListaCarro lista, char* placa);
 void ProcurarCarro(ListaCarro lista, char* placa);
 void SalvarArquivoListaCarros(ListaCarro lista);
@@ -63,14 +62,6 @@ char* SolicitaTexto()
 	scanf("%s", texto);
 
 	return texto;
-}
-
-int SolicitaInteiro()
-{
-	int valor;
-	scanf("%d", &valor);
-
-	return valor;
 }
 
 int SolicitaReal()
@@ -104,11 +95,11 @@ int ImprimeMenu()
 	//
 	printf("Selecione uma opcao:\n");
 
-	printf("\t\"1\" Cadastrar novo funcionario.\n");
+	printf("\t\"1\" Cadastrar novo carro.\n");
 	printf("\t\"2\" Imprimir todos os funcionarios cadastrados.\n");
 	printf("\t\"3\" Pesquisar por ID do funcionario.\n");
 	printf("\t\"4\" Excluir por ID do funcionario.\n");
-	printf("\t\"x\" Fechar o programa.\n");
+	printf("\t\"9\" Fechar o programa.\n");
 
 	printf("Digite a opcao:\t");
 
@@ -120,50 +111,50 @@ int ImprimeMenu()
 	return operacao;
 }
 
-void CadastrarCarro(ListaCarro lista, Carro carro)
+void CadastrarCarro(ListaCarro *lista, Carro carro)
 {
 	int valido = 1;
 
-	if (lista.Quantidade < lista.MAX)
+	if (lista->Quantidade < MAX_CARROS)
 	{
 		valido = 0;
-		printf("Lista cheia. Quantidade máxima %d registro(s).", lista.MAX);
+		printf("Lista cheia. Quantidade máxima %d registro(s).", MAX_CARROS);
 	}
 
-	if (carro.Ano < carro.MIN_ANO || carro.Ano > carro.MAX_ANO)
+	if (carro.Ano < MIN_ANO || carro.Ano > MAX_ANO)
 	{
 		valido = 0;
-		printf("Ano invalido. Deve estar entre %d e %d.", carro.MIN_ANO, carro.MAX_ANO);
+		printf("Ano invalido. Deve estar entre %d e %d.", MIN_ANO, MAX_ANO);
 	}
 
 	if (StringVazia(carro.Cor))
 	{
 		valido = 0;
-		printf("Cor invalida. Digite um texto.", lista.MAX);
+		printf("Cor invalida. Digite um texto.", MAX_CARROS);
 	}
 
 	if (StringVazia(carro.Modelo))
 	{
 		valido = 0;
-		printf("Modelo invalido. Digite um texto.", lista.MAX);
+		printf("Modelo invalido. Digite um texto.", MAX_CARROS);
 	}
 
 	if (StringVazia(carro.Placa))
 	{
 		valido = 0;
-		printf("Placa invalida. Digite um texto com 7 caracteres.", lista.MAX);
+		printf("Placa invalida. Digite um texto com 7 caracteres.", MAX_CARROS);
 	}
 
 	if (valido) 
 	{
-		lista.Quantidade++;
-		lista.Registros[lista.Quantidade] = carro;
+		lista->Quantidade++;
+		lista->Registros[lista->Quantidade] = carro;
 	}
 }
 
 void ListarCarros(ListaCarro lista)
 {
-	bool valido = 1;
+	int valido = 1;
 
 	if (!lista.Quantidade)
 	{
@@ -185,11 +176,11 @@ void ListarCarros(ListaCarro lista)
 
 void ProcurarCarro(ListaCarro lista, char* placa)
 {
-	bool valido = true;
+	int valido = 1;
 
 	if (lista.Quantidade == 0)
 	{
-		valido = false;
+		valido = 0;
 		printf("Lista vazia.");
 	}
 
@@ -208,25 +199,23 @@ void ProcurarCarro(ListaCarro lista, char* placa)
 	}
 }
 
-void ReiniciarCarros(ListaCarro lista)
+void ReiniciarCarros(ListaCarro* lista)
 {
-	lista.Quantidade = 0;
+	lista->Quantidade = 0;
 }
 
 void ExcluirCarro(ListaCarro lista, char* placa)
 {
-	bool valido = true;
+	int valido = 1;
 
 	if (lista.Quantidade == 0)
 	{
-		valido = false;
+		valido = 0;
 		printf("Lista vazia.");
 	}
 
 	if (valido)
 	{
-		bool registroEncontrado = false;
-
 		for (int i = 0; i < lista.Quantidade; i++)
 		{
 			if (strcmp(lista.Registros[i].Placa, placa))
@@ -249,69 +238,44 @@ void CarregarArquivoListaCarros(ListaCarro *lista)
 	
 }
 
-//int ExecutaOperacao()
-//{
-//	while (1)
-//	{
-//		char operacao;
-//		int id;
-//		char nome[20];
-//		char sobrenome[20];
-//		char cargo[20];
-//		float salario;
-//
-//		operacao = ImprimeMenu();
-//
-//		if (operacao == 'x' || operacao == 'X')
-//			break;
-//
-//		switch (operacao)
-//		{
-//			case '1':
-//				printf("Digite o ID\n\t");
-//				id = SolicitaInteiro();
-//
-//				printf("Digite o Nome\n\t");
-//				strcpy(nome, SolicitaTexto());
-//
-//				printf("Digite o Sobrenome\n\t");
-//				strcpy(sobrenome, SolicitaTexto());
-//
-//				printf("Digite o Cargo\n\t");
-//				strcpy(cargo, SolicitaTexto());
-//
-//				printf("Digite o Salario\n\t");
-//				salario = SolicitaReal();
-//
-//				Cadastrar(id, &nome, &sobrenome, &cargo, salario);
-//
-//				break;
-//
-//			case '2':
-//				Imprimir();
-//
-//				break;
-//
-//			case '3':
-//				printf("Digite o ID\n\t");
-//				id = SolicitaInteiro();
-//
-//				Pesquisar(id);
-//
-//				break;
-//
-//			case '4':
-//				printf("Digite o ID\n\t");
-//				id = SolicitaInteiro();
-//
-//				Excluir(id);
-//
-//				break;
-//		}
-//
-//		system("PAUSE");
-//	}
-//}
+int ExecutaOperacao()
+{
+	ListaCarro listaCarro;
+	Carro carro;
+
+	ReiniciarCarros(&listaCarro);
+
+	while (1)
+	{
+		int operacao = ImprimeMenu();
+
+		if (operacao == 9)
+			break;
+
+		switch (operacao)
+		{
+			case 1:
+				printf("Digite a Placa\n\t");
+				carro.Placa = SolicitaTexto();
+
+				printf("Digite o Modelo\n\t");
+				carro.Modelo = SolicitaTexto();
+
+				printf("Digite o Ano\n\t");
+				carro.Ano = SolicitaInteiro();
+
+				printf("Digite a Cor\n\t");
+				carro.Cor = SolicitaTexto();
+
+				CadastrarCarro(&listaCarro, carro);
+
+				break;
+
+		}
+
+		system("PAUSE");
+	}
+}
 
 int main()
 {
