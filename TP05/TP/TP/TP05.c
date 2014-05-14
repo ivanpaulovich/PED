@@ -41,7 +41,7 @@ void CarregarArquivoListaCarros(ListaCarro *lista);
 //
 // Inicialização e execução
 //
-int ExecutaOperacao();
+void ExecutaOperacao();
 int main();
 
 //
@@ -194,12 +194,12 @@ void ProcurarCarro(ListaCarro lista, char* placa)
 	{
 		for (int i = 0; i < lista.Quantidade; i++)
 		{
-			if (strcmp(lista.Registros[i].Placa, placa))
+			if (strcmp(lista.Registros[i].Placa, placa) == 0)
 			{
-				printf("----------- Carro com Placa %d -----------\n", lista.Registros[i].Placa);
-				printf("Modelo:\t\t%s %s\n", lista.Registros[i].Modelo);
-				printf("Ano:\t\t%s\n", lista.Registros[i].Ano);
-				printf("Cor:\t%f\n", lista.Registros[i].Cor);
+				printf("----------- Carro com Placa %s -----------\n", lista.Registros[i].Placa);
+				printf("Modelo:\t%s\n", lista.Registros[i].Modelo);
+				printf("Ano:\t%d\n", lista.Registros[i].Ano);
+				printf("Cor:\t%s\n", lista.Registros[i].Cor);
 			}
 		}
 	}
@@ -282,7 +282,7 @@ void CarregarArquivoListaCarros(ListaCarro *lista)
 	fclose(fp);
 }
 
-int ExecutaOperacao()
+void ExecutaOperacao()
 {
 	ListaCarro listaCarro;
 	Carro carro;
@@ -342,7 +342,7 @@ int ExecutaOperacao()
 
 		case 4:
 			printf("Digite a Placa\n\t");
-			strcpy(carro.Placa, SolicitaTexto());
+			strcpy(placa, SolicitaTexto());
 
 			ProcurarCarro(listaCarro, placa);
 
