@@ -59,7 +59,7 @@ int SolicitaInteiro()
 char* SolicitaTexto()
 {
 	char texto[100];
-	scanf("%s", texto);
+	scanf("%*[^A-Za-z]", texto);
 
 	return texto;
 }
@@ -96,9 +96,13 @@ int ImprimeMenu()
 	printf("Selecione uma opcao:\n");
 
 	printf("\t\"1\" Cadastrar novo carro.\n");
-	printf("\t\"2\" Imprimir todos os funcionarios cadastrados.\n");
-	printf("\t\"3\" Pesquisar por ID do funcionario.\n");
-	printf("\t\"4\" Excluir por ID do funcionario.\n");
+	printf("\t\"2\" Imprimir todos os carros cadastrados.\n");
+	printf("\t\"3\" Reiniciar lista de carros.\n");
+	printf("\t\"4\" Procurar por placa do carro.\n");
+	printf("\t\"5\" Excluir por placa do carro.\n");
+	printf("\t\"6\" Carregar carros do arquivo.\n");
+	printf("\t\"7\" Salvar carros para o arquivo.\n");
+
 	printf("\t\"9\" Fechar o programa.\n");
 
 	printf("Digite a opcao:\t");
@@ -166,7 +170,7 @@ void ListarCarros(ListaCarro lista)
 	{
 		for (int i = 0; i < lista.Quantidade; i++)
 		{
-			printf("-------------------------- Carro com Placa %s -------------------------------\n", lista.Registros[i].Placa);
+			printf("----------- Carro com Placa %s -----------\n", lista.Registros[i].Placa);
 			printf("Modelo:\t%s\n", lista.Registros[i].Modelo);
 			printf("Ano:\t%d\n", lista.Registros[i].Ano);
 			printf("Cor:\t%s\n", lista.Registros[i].Cor);
@@ -190,7 +194,7 @@ void ProcurarCarro(ListaCarro lista, char* placa)
 		{
 			if (strcmp(lista.Registros[i].Placa, placa))
 			{
-				printf("-------------------------- Carro com Placa %d -------------------------------\n", lista.Registros[i].Placa);
+				printf("----------- Carro com Placa %d -----------\n", lista.Registros[i].Placa);
 				printf("Modelo:\t\t%s %s\n", lista.Registros[i].Modelo);
 				printf("Ano:\t\t%s\n", lista.Registros[i].Ano);
 				printf("Cor:\t%f\n", lista.Registros[i].Cor);
@@ -236,11 +240,44 @@ void ExcluirCarro(ListaCarro lista, char* placa)
 
 void SalvarArquivoListaCarros(ListaCarro lista)
 {
+	FILE *saida = fopen("carros.txt", "a+");
+
+	if (saida != NULL)
+	{
+		for (int i = 0; i < lista.Quantidade; i++)
+		{
+			fprintf(saida, "%s %s %s %d\n", lista.Registros[i].Placa, lista.Registros[i].Modelo, lista.Registros[i].Cor, lista.Registros[i].Ano);
+		}
+
+	}
+	fclose(saida);
 }
 
 void CarregarArquivoListaCarros(ListaCarro *lista)
 {
-	
+	FILE *fp = fopen("carros.txt", "r");
+
+	if (fp != NULL)
+	{
+		char placa[100];
+		char modelo[20];
+		char cor[20];
+		int ano;
+
+		while (fscanf(fp, "%s%*c %s%*c %s%*c %d", placa, modelo, cor, &ano) != EOF)
+		{
+			Carro carro;
+
+			strcpy(carro.Placa, placa);
+			strcpy(carro.Modelo, modelo);
+			carro.Ano = ano;
+			strcpy(carro.Cor, cor);
+
+			CadastrarCarro(lista, carro);
+		}
+	}
+
+	fclose(fp);
 }
 
 int ExecutaOperacao()
@@ -265,7 +302,7 @@ int ExecutaOperacao()
 				strcpy(carro.Placa, SolicitaTexto());
 
 				printf("Digite o Modelo\n\t");
-				strcpy(carro.Modelo,SolicitaTexto());
+				strcpy(carro.Modelo, SolicitaTexto());
 
 				printf("Digite o Ano\n\t");
 				carro.Ano = SolicitaInteiro();
