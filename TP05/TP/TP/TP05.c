@@ -31,12 +31,12 @@ typedef struct
 	Carro Registros[10];
 } ListaCarro;
 
-void CadastrarCarro(ListaCarro lista, Carro carro);
-void ListarCarros(ListaCarro* lista);
-void ExcluirCarro(ListaCarro lista, char* placa);
+void CadastrarCarro(ListaCarro *lista, Carro carro);
+void ListarCarros(ListaCarro lista);
+void ExcluirCarro(ListaCarro* lista, char* placa);
 void ProcurarCarro(ListaCarro lista, char* placa);
 void SalvarArquivoListaCarros(ListaCarro lista);
-void CarregarArquivoListaCarros(ListaCarro lista);
+void CarregarArquivoListaCarros(ListaCarro *lista);
 
 //
 // Inicialização e execução
@@ -76,9 +76,9 @@ int SolicitaReal()
 
 int StringVazia(char* texto)
 {
-	if (texto) 
+	if (texto)
 	{
-		if (texto[0] == '\0') 
+		if (texto[0] == '\0')
 		{
 			return 1;
 		}
@@ -151,7 +151,7 @@ void CadastrarCarro(ListaCarro *lista, Carro carro)
 		printf("Placa invalida. Digite um texto com 7 caracteres.", MAX_CARROS);
 	}
 
-	if (valido) 
+	if (valido)
 	{
 		lista->Registros[lista->Quantidade] = carro;
 		lista->Quantidade++;
@@ -299,72 +299,72 @@ int ExecutaOperacao()
 
 		switch (operacao)
 		{
-			case 1:
-				printf("Digite a Placa\n\t");
-				strcpy(carro.Placa, SolicitaTexto());
+		case 1:
+			printf("Digite a Placa\n\t");
+			strcpy(carro.Placa, SolicitaTexto());
 
-				printf("Digite o Modelo\n\t");
-				strcpy(carro.Modelo,SolicitaTexto());
+			printf("Digite o Modelo\n\t");
+			strcpy(carro.Modelo, SolicitaTexto());
 
-				printf("Digite o Ano\n\t");
-				carro.Ano = SolicitaInteiro();
+			printf("Digite o Ano\n\t");
+			carro.Ano = SolicitaInteiro();
 
-				printf("Digite a Cor\n\t");
-				strcpy(carro.Cor, SolicitaTexto());
+			printf("Digite a Cor\n\t");
+			strcpy(carro.Cor, SolicitaTexto());
 
-				CadastrarCarro(&listaCarro, carro);
+			CadastrarCarro(&listaCarro, carro);
 
-				break;
+			break;
 
-			case 2:
+		case 2:
 
-				if (listaCarro.Quantidade == 0)
+			if (listaCarro.Quantidade == 0)
+			{
+				printf("Lista vazia. Deseja carregar e listar os itens em backup? 1 para sim. 2 para nao.");
+
+				int continuar = SolicitaInteiro();
+
+				if (continuar == 1)
 				{
-					printf("Lista vazia. Deseja carregar e listar os itens em backup? 1 para sim. 2 para nao.");
-
-					int continuar = SolicitaInteiro();
-
-					if (continuar == 1)
-					{
-						CarregarArquivoListaCarros(&listaCarro, placa);
-					}
-
+					CarregarArquivoListaCarros(&listaCarro);
 				}
 
-				ListarCarros(listaCarro);
+			}
 
-				break;
+			ListarCarros(listaCarro);
 
-			case 3:
-				ReiniciarCarros(&listaCarro);
+			break;
 
-				break;
+		case 3:
+			ReiniciarCarros(&listaCarro);
 
-			case 4:
-				printf("Digite a Placa\n\t");
-				strcpy(carro.Placa, SolicitaTexto());
+			break;
 
-				ProcurarCarro(listaCarro, placa);
+		case 4:
+			printf("Digite a Placa\n\t");
+			strcpy(carro.Placa, SolicitaTexto());
 
-				break;
+			ProcurarCarro(listaCarro, placa);
 
-			case 5:
-				printf("Digite a Placa\n\t");
-				strcpy(placa, SolicitaTexto());
+			break;
 
-				ExcluirCarro(&listaCarro, placa);
+		case 5:
+			printf("Digite a Placa\n\t");
+			strcpy(placa, SolicitaTexto());
 
-				break;
+			ExcluirCarro(&listaCarro, placa);
 
-			case 6:
-				SalvarArquivoListaCarros(listaCarro);
+			break;
 
-				break;
+		case 6:
+			SalvarArquivoListaCarros(listaCarro);
 
-			case 7:
-				CarregarArquivoListaCarros(&listaCarro);
+			break;
 
-				break;
+		case 7:
+			CarregarArquivoListaCarros(&listaCarro);
+
+			break;
 
 		}
 
