@@ -59,12 +59,9 @@ int SolicitaInteiro()
 char* SolicitaTexto()
 {
 	char texto[100];
-	scanf(" %49[^ \t.\n]%*c", texto);
+	scanf("%s", texto);
 
-	char final;
-	do
-		final = getchar();
-	while (final != '\n');
+	while (getchar() != '\n');
 
 	return texto;
 }
@@ -218,11 +215,11 @@ void ReiniciarCarros(ListaCarro* lista)
 	}
 }
 
-void ExcluirCarro(ListaCarro lista, char* placa)
+void ExcluirCarro(ListaCarro* lista, char* placa)
 {
 	int valido = 1;
 
-	if (lista.Quantidade == 0)
+	if (lista->Quantidade == 0)
 	{
 		valido = 0;
 		printf("Lista vazia.");
@@ -230,14 +227,14 @@ void ExcluirCarro(ListaCarro lista, char* placa)
 
 	if (valido)
 	{
-		for (int i = 0; i < lista.Quantidade; i++)
+		for (int i = 0; i < lista->Quantidade; i++)
 		{
-			if (strcmp(lista.Registros[i].Placa, placa))
+			if (strcmp(lista->Registros[i].Placa, placa) == 0)
 			{
-				for (int j = i; i < lista.Quantidade; j++)
-					lista.Registros[i] = lista.Registros[i + 1];
+				for (int j = i; j < lista->Quantidade; j++)
+					lista->Registros[j] = lista->Registros[j + 1];
 
-				lista.Quantidade--;
+				lista->Quantidade--;
 			}
 		}
 	}
@@ -320,6 +317,20 @@ int ExecutaOperacao()
 				break;
 
 			case 2:
+
+				if (listaCarro.Quantidade == 0)
+				{
+					printf("Lista vazia. Deseja carregar e listar os itens em backup? 1 para sim. 2 para nao.");
+
+					int continuar = SolicitaInteiro();
+
+					if (continuar == 1)
+					{
+						CarregarArquivoListaCarros(&listaCarro, placa);
+					}
+
+				}
+
 				ListarCarros(listaCarro);
 
 				break;
@@ -339,19 +350,19 @@ int ExecutaOperacao()
 
 			case 5:
 				printf("Digite a Placa\n\t");
-				strcpy(carro.Placa, SolicitaTexto());
+				strcpy(placa, SolicitaTexto());
 
-				ExcluirCarro(listaCarro, placa);
+				ExcluirCarro(&listaCarro, placa);
 
 				break;
 
 			case 6:
-				SalvarArquivoListaCarros(listaCarro, placa);
+				SalvarArquivoListaCarros(listaCarro);
 
 				break;
 
 			case 7:
-				CarregarArquivoListaCarros(&listaCarro, placa);
+				CarregarArquivoListaCarros(&listaCarro);
 
 				break;
 
