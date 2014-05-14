@@ -19,10 +19,10 @@ const int MAX_CARROS = 10;
 //
 typedef struct
 {
-	char*  Placa;
-	char*  Modelo;
+	char  Placa[100];
+	char  Modelo[100];
 	int  Ano;
-	char*  Cor;
+	char  Cor[100];
 } Carro;
 
 typedef struct
@@ -58,7 +58,7 @@ int SolicitaInteiro()
 
 char* SolicitaTexto()
 {
-	char texto[20];
+	char texto[100];
 	scanf("%s", texto);
 
 	return texto;
@@ -115,7 +115,7 @@ void CadastrarCarro(ListaCarro *lista, Carro carro)
 {
 	int valido = 1;
 
-	if (lista->Quantidade < MAX_CARROS)
+	if (lista->Quantidade >= MAX_CARROS)
 	{
 		valido = 0;
 		printf("Lista cheia. Quantidade máxima %d registro(s).", MAX_CARROS);
@@ -147,8 +147,8 @@ void CadastrarCarro(ListaCarro *lista, Carro carro)
 
 	if (valido) 
 	{
-		lista->Quantidade++;
 		lista->Registros[lista->Quantidade] = carro;
+		lista->Quantidade++;
 	}
 }
 
@@ -166,10 +166,10 @@ void ListarCarros(ListaCarro lista)
 	{
 		for (int i = 0; i < lista.Quantidade; i++)
 		{
-			printf("-------------------------- Carro com Placa %d -------------------------------\n", lista.Registros[i].Placa);
-			printf("Modelo:\t\t%s %s\n", lista.Registros[i].Modelo);
-			printf("Ano:\t\t%s\n", lista.Registros[i].Ano);
-			printf("Cor:\t%f\n", lista.Registros[i].Cor);
+			printf("-------------------------- Carro com Placa %s -------------------------------\n", lista.Registros[i].Placa);
+			printf("Modelo:\t%s\n", lista.Registros[i].Modelo);
+			printf("Ano:\t%d\n", lista.Registros[i].Ano);
+			printf("Cor:\t%s\n", lista.Registros[i].Cor);
 		}
 	}
 }
@@ -202,6 +202,11 @@ void ProcurarCarro(ListaCarro lista, char* placa)
 void ReiniciarCarros(ListaCarro* lista)
 {
 	lista->Quantidade = 0;
+
+	for (int i = 0; i < MAX_CARROS; i++)
+	{
+		memset(&lista->Registros[i], 0, sizeof(Carro));
+	}
 }
 
 void ExcluirCarro(ListaCarro lista, char* placa)
@@ -229,7 +234,7 @@ void ExcluirCarro(ListaCarro lista, char* placa)
 	}
 }
 
-void SalvarArquivoListaCarros(ListaCarro *lista)
+void SalvarArquivoListaCarros(ListaCarro lista)
 {
 }
 
@@ -242,6 +247,7 @@ int ExecutaOperacao()
 {
 	ListaCarro listaCarro;
 	Carro carro;
+	char placa[100];
 
 	ReiniciarCarros(&listaCarro);
 
@@ -256,18 +262,54 @@ int ExecutaOperacao()
 		{
 			case 1:
 				printf("Digite a Placa\n\t");
-				carro.Placa = SolicitaTexto();
+				strcpy(carro.Placa, SolicitaTexto());
 
 				printf("Digite o Modelo\n\t");
-				carro.Modelo = SolicitaTexto();
+				strcpy(carro.Modelo,SolicitaTexto());
 
 				printf("Digite o Ano\n\t");
 				carro.Ano = SolicitaInteiro();
 
 				printf("Digite a Cor\n\t");
-				carro.Cor = SolicitaTexto();
+				strcpy(carro.Cor, SolicitaTexto());
 
 				CadastrarCarro(&listaCarro, carro);
+
+				break;
+
+			case 2:
+				ListarCarros(listaCarro);
+
+				break;
+
+			case 3:
+				ReiniciarCarros(&listaCarro);
+
+				break;
+
+			case 4:
+				printf("Digite a Placa\n\t");
+				strcpy(carro.Placa, SolicitaTexto());
+
+				ProcurarCarro(listaCarro, placa);
+
+				break;
+
+			case 5:
+				printf("Digite a Placa\n\t");
+				strcpy(carro.Placa, SolicitaTexto());
+
+				ExcluirCarro(listaCarro, placa);
+
+				break;
+
+			case 6:
+				SalvarArquivoListaCarros(listaCarro, placa);
+
+				break;
+
+			case 7:
+				CarregarArquivoListaCarros(&listaCarro, placa);
 
 				break;
 
