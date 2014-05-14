@@ -59,7 +59,12 @@ int SolicitaInteiro()
 char* SolicitaTexto()
 {
 	char texto[100];
-	scanf("%*[^A-Za-z]", texto);
+	scanf(" %49[^ \t.\n]%*c", texto);
+
+	char final;
+	do
+		final = getchar();
+	while (final != '\n');
 
 	return texto;
 }
@@ -100,8 +105,8 @@ int ImprimeMenu()
 	printf("\t\"3\" Reiniciar lista de carros.\n");
 	printf("\t\"4\" Procurar por placa do carro.\n");
 	printf("\t\"5\" Excluir por placa do carro.\n");
-	printf("\t\"6\" Carregar carros do arquivo.\n");
-	printf("\t\"7\" Salvar carros para o arquivo.\n");
+	printf("\t\"6\" Salvar carros para o arquivo.\n");
+	printf("\t\"7\" Carregar carros do arquivo.\n");
 
 	printf("\t\"9\" Fechar o programa.\n");
 
@@ -302,7 +307,7 @@ int ExecutaOperacao()
 				strcpy(carro.Placa, SolicitaTexto());
 
 				printf("Digite o Modelo\n\t");
-				strcpy(carro.Modelo, SolicitaTexto());
+				strcpy(carro.Modelo,SolicitaTexto());
 
 				printf("Digite o Ano\n\t");
 				carro.Ano = SolicitaInteiro();
